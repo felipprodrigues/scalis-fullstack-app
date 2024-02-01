@@ -20,17 +20,26 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+# Next.js Project with Prisma ORM
 
-To learn more about Next.js, take a look at the following resources:
+To explore the database tables and models using Prisma as the ORM, follow these steps:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Install Dependencies:**
+   Make sure you have all the required dependencies installed. You can do this by running:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+2. **Run Prisma Studio:**
+   Open your command line and execute the following command:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+ npx prisma studio
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. **Access Prisma Studio Interface:**
+   After running the command, a new window will open in your default web browser, displaying the Prisma Studio interface.
+
+4. **View and Edit:**
+   Navigate to [http://localhost:5555](http://localhost:5555) in your browser if it doesn't open automatically. Here, you can view and edit the database tables and models using the Prisma Studio interface.

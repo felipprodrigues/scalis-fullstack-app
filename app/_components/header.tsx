@@ -1,22 +1,23 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import Image from 'next/image'
 import logoImg from '../assets/logo.png'
+import Image from 'next/image'
+
+import { useSession } from 'next-auth/react'
+import { useState } from 'react'
+
+import DrawerCard from './drawerCard'
 import { Button } from './ui/button'
 import {
   Drawer,
-  DrawerClose,
+  DrawerTrigger,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerClose,
 } from './ui/drawer'
-
-import DrawerCard from './drawerCard'
-import { useState } from 'react'
 
 export function Header() {
   const [selectedType, setSelectedType] = useState<string | undefined>('')
@@ -24,8 +25,6 @@ export function Header() {
   const session = useSession()
 
   const handleSelectTransferType = (value: string) => {
-    console.log(value, 'aqui')
-    // setSelectedType(() => ())
     setSelectedType(value)
   }
 
@@ -61,11 +60,11 @@ export function Header() {
                       </Button>
                       <Button
                         variant={
-                          selectedType === 'withdrawal' ? 'default' : 'outline'
+                          selectedType === 'withdraw' ? 'default' : 'outline'
                         }
-                        onClick={() => handleSelectTransferType('withdrawal')}
+                        onClick={() => handleSelectTransferType('withdraw')}
                       >
-                        Withdrawal
+                        Withdraw
                       </Button>
                       <Button
                         variant={
@@ -79,29 +78,21 @@ export function Header() {
                   </DrawerHeader>
 
                   <div className="max-w-[355px] w-full p-4">
-                    <DrawerCard
-                      transactionType={
-                        selectedType === 'transfer'
-                          ? 'Transfer'
-                          : selectedType === 'deposit'
-                          ? 'Deposit'
-                          : selectedType === 'withdrawal'
-                          ? 'Withdrawal'
-                          : ''
-                      }
-                      placeholder={
-                        selectedType === 'transfer'
-                          ? 'origin account'
-                          : selectedType === 'deposit'
-                          ? 'destination account'
-                          : selectedType === 'withdrawal'
-                          ? 'origin account'
-                          : ''
-                      }
-                    />
+                    {selectedType && (
+                      <DrawerCard
+                        transactionType={
+                          selectedType === 'transfer'
+                            ? 'Transfer'
+                            : selectedType === 'deposit'
+                            ? 'Deposit'
+                            : selectedType === 'withdraw'
+                            ? 'Withdraw'
+                            : ''
+                        }
+                      />
+                    )}
                   </div>
                   <DrawerFooter>
-                    <Button>Submit</Button>
                     <DrawerClose asChild>
                       <Button variant="outline">Close</Button>
                     </DrawerClose>

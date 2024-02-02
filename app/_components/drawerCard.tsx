@@ -1,16 +1,38 @@
-import { Input } from './ui/input'
-import React from 'react'
+import { z } from 'zod'
+
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
+import { Input } from './ui/input'
+import { Button } from './ui/button'
+
+const drawerInputSchema = z.object({
+  origin: z.string(),
+  destine: z.string(),
+  value: z.string(),
+})
+
+type DrawerInputData = z.infer<typeof drawerInputSchema>
 
 interface DrawerCardProps {
   transactionType: string | boolean
-  placeholder: string
 }
 
-export default function DrawerCard({
-  transactionType,
-  placeholder,
-}: DrawerCardProps) {
+export default function DrawerCard({ transactionType }: DrawerCardProps) {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<DrawerInputData>()
+
+  const onSubmit: SubmitHandler<DrawerInputData> = (data) => {
+    console.log(transactionType, 'tipo')
+    console.log(data, 'aqui o data')
+
+    reset()
+  }
+
+  console.log(transactionType, 'aqui')
   return (
     <Card>
       <CardHeader>
@@ -18,27 +40,59 @@ export default function DrawerCard({
           {transactionType} selected
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            {transactionType === 'Transfer' ? (
+
+      <CardContent className="">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col  justify-between h-full"
+        >
+          <div className="grid w-full items-center gap-4 p-0">
+            {transactionType === 'Transfer' && (
               <>
                 <div className="flex flex-col space-y-1.5">
-                  <Input id="destination" placeholder={placeholder} />
+                  <Input
+                    placeholder="origin account"
+                    {...register('origin', { required: true })}
+                  />
                 </div>
                 <div className="flex flex-col space-y-1.5">
-                  <Input id="bankAccount" placeholder="destination account" />
+                  <Input
+                    placeholder="destination account"
+                    {...register('destine', { required: true })}
+                  />
                 </div>
               </>
-            ) : (
+            )}
+
+            {transactionType === 'Deposit' && (
               <div className="flex flex-col space-y-1.5">
-                <Input id="bankAccount" placeholder={placeholder} />
+                <Input
+                  placeholder="destination account"
+                  {...register('destine', { required: true })}
+                />
               </div>
             )}
+
+            {transactionType === 'Withdraw' && (
+              <div className="flex flex-col space-y-1.5">
+                <Input
+                  placeholder="origin account"
+                  {...register('origin', { required: true })}
+                />
+              </div>
+            )}
+
             <div className="flex flex-col space-y-1.5">
-              <Input id="currency" placeholder="value here" />
+              <Input
+                placeholder="value"
+                {...register('value', { required: true })}
+              />
             </div>
           </div>
+
+          <Button type="submit" className="mt-4">
+            Submit
+          </Button>
         </form>
       </CardContent>
     </Card>

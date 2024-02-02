@@ -1,12 +1,10 @@
-import { Header } from '../_components/header'
-import { LoginCard } from '../_components/loginCard'
+import ContentWrapper from './_components/contentWrapper'
 
 export default function Home() {
   return (
     <>
-      <Header />
       <div className="flex justify-center items-center w-full h-full">
-        <LoginCard />
+        <ContentWrapper />
       </div>
     </>
   )

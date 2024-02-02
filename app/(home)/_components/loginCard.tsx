@@ -1,18 +1,23 @@
 'use client'
 
 import { signIn } from 'next-auth/react'
-import { Button } from './ui/button'
+import { Button } from '../../_components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from './ui/card'
-import { Input } from './ui/input'
+} from '../../_components/ui/card'
+import { Input } from '../../_components/ui/input'
 
 export function LoginCard() {
+  const handleLoginClick = async (e: any) => {
+    e.preventDefault()
+
+    await signIn()
+  }
+
   return (
     <Card className="w-[350px]">
       <CardHeader>
@@ -46,7 +51,9 @@ export function LoginCard() {
           <Button className="w-full">Sign in</Button>
         </div>
 
-        <Button variant="outline" onClick={() => signIn()}>Login with Google</Button>
+        <Button variant="outline" onClick={(e) => handleLoginClick(e)}>
+          Login with Google
+        </Button>
       </CardFooter>
     </Card>
   )

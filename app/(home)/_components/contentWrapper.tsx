@@ -2,9 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { LoginCard } from './loginCard'
-import { Card, CardContent, CardHeader } from '@/app/_components/ui/card'
 
-import { ArrowUpCircle } from 'lucide-react'
 import AccountBalanceCard from './accountBalanceCard'
 import Table from '@/app/_components/table'
 

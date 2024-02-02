@@ -37,15 +37,15 @@ model BankAccount {
 
 model Transaction {
   transactionId        String   @id @default(uuid())
-  transactionAccountId String // origem da transação
-  destinationAccountId String // destino da transação
+  transactionAccountId String? // origem da transação
+  destinationAccountId String? // destino da transação
   amount               Int
   transactionType      String
   timestamp            DateTime @default(now())
 
   // Relates to the Account table
-  sourceAccount      BankAccount @relation(name: "sourceAccount", fields: [transactionAccountId], references: [accountId])
-  destinationAccount BankAccount @relation(name: "destinationAccount", fields: [destinationAccountId], references: [accountId])
+  sourceAccount      BankAccount? @relation(name: "sourceAccount", fields: [transactionAccountId], references: [accountId])
+  destinationAccount BankAccount? @relation(name: "destinationAccount", fields: [destinationAccountId], references: [accountId])
 }
 
 model Account {

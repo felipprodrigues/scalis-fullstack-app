@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
-import logoImg from '../../public/logo.svg'
+import logoImg from '../assets/logo.png'
 import { Button } from './ui/button'
 
 export function Header() {
@@ -11,12 +11,16 @@ export function Header() {
   return (
     <>
       {session.status === 'authenticated' ? (
-        <header className="pt-[2.5rem] pb-[7.5rem] bg-secondary w-full flex justify-center">
+        <header className="pt-[2.5rem] pb-[7.5rem] bg-primary w-full flex justify-center">
           <div className="w-full max-w-[1120px] flex justify-between items-center">
-            <Image src={logoImg} alt="logo-image" />
+            <Image
+              src={logoImg}
+              alt="logo-image"
+              className="mix-blend-multiply"
+            />
 
             {/* add modal or drawer */}
-            <Button>New Transaction</Button>
+            <Button variant="secondary">New Transaction</Button>
           </div>
         </header>
       ) : null}

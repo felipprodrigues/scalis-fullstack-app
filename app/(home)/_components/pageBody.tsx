@@ -7,20 +7,28 @@ import AccountBalanceCard from './accountBalanceCard'
 import Table from '@/app/_components/table'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { getServerSession } from 'next-auth'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { db } from '@/app/_lib/prisma'
+import { Button } from '@/app/_components/ui/button'
 
-interface PageContentProps {
-  userClient: any
+interface UserClientProps {
+  id: string
+  name: string | null
+  email: string | null
+  emailVerified?: null
+  image: string | null
 }
 
-export default function PageBody({ userClient }: PageContentProps) {
-  console.log(userClient, 'aqui')
+export default function PageBody() {
+  const session = useSession()
+
+  const user = session.data?.user
 
   return (
     <>
       <div className="w-full max-w-[1120px] relative">
         <div className="absolute top-[-50px] w-full flex flex-col gap-8">
+          <Button onClick={() => signOut()}>Sair</Button>
           <div>
             <span className="text-xs text-gray-100">Saving | 1457-8</span>
             <div className="grid grid-cols-3 gap-8">

@@ -4,6 +4,9 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
+import { useEffect, useState } from 'react'
+import { db } from '../_lib/prisma'
+import { useSession } from 'next-auth/react'
 
 const drawerInputSchema = z.object({
   origin: z.string(),
@@ -18,6 +21,8 @@ interface DrawerCardProps {
 }
 
 export default function DrawerCard({ transactionType }: DrawerCardProps) {
+  const [bankAccounts, setBankAccounts] = useState([])
+
   const {
     register,
     handleSubmit,
@@ -31,6 +36,40 @@ export default function DrawerCard({ transactionType }: DrawerCardProps) {
 
     reset()
   }
+
+  const session = useSession()
+
+  console.log(session.data?.user.id, 'aqio')
+  // findMany tabela bankAccounts
+  const fetchBankAccounts = async () => {
+    const dbUserBankAccount = await db.bankAccount.findMany({
+      where: {
+        userId: session.data?.user.id,
+      },
+    })
+
+    setBankAccounts(dbUserBankAccount as any)
+  }
+
+  useEffect(() => {
+    fetchBankAccounts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    console.log(bankAccounts, 'aqui as contas')
+  }, [bankAccounts])
+
+  // filtrar pelo userID
+  // pegar os ID's das contas
+
+  // adicionar select
+  // selecionar
+  //
+  // iterar options
+
+  // label - accountNumber
+  // value -
 
   console.log(transactionType, 'aqui')
   return (
@@ -70,6 +109,14 @@ export default function DrawerCard({ transactionType }: DrawerCardProps) {
                   placeholder="destination account"
                   {...register('destine', { required: true })}
                 />
+                <select name="select">
+                  {/* {bankAccounts.map((bankAccount: any) => ({
+                    <option value=""></option>
+                    // <option value={bankAccount.id}>
+                    //   {bankAccount.accountNumber}
+                    // </option>
+                  }))} */}
+                </select>
               </div>
             )}
 

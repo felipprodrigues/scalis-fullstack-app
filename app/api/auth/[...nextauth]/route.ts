@@ -1,4 +1,5 @@
 import { db } from '@/app/_lib/prisma'
+import { generateRandomBankAccount } from '@/app/_utils/formatters'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import NextAuth, { AuthOptions } from 'next-auth'
 import { Adapter } from 'next-auth/adapters'
@@ -18,6 +19,42 @@ export const authOptions: AuthOptions = {
         ...session,
         user,
       }
+    },
+    async signIn({ user }) {
+      console.log(user.id, 'id 123123')
+
+      const userBankAccounts = await db.bankAccount.findMany({
+        where: {
+          userId: user.id,
+        },
+      })
+
+      if (!userBankAccounts.length) {
+        try {
+          await db.bankAccount.create({
+            data: {
+              userId: user.id,
+              accountType: 'saving',
+              accountNumber: generateRandomBankAccount(),
+            },
+          })
+
+          await db.bankAccount.create({
+            data: {
+              userId: user.id,
+              accountType: 'checking',
+              accountNumber: generateRandomBankAccount(),
+            },
+          })
+
+          console.log('Congratz! Now we have your soul!')
+        } catch (error) {
+          console.log(error, 'aqui o erro')
+        }
+      }
+
+      console.log(userBankAccounts, 'sign in ')
+      return true
     },
   },
 }

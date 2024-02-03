@@ -1,29 +1,42 @@
 import { getServerSession } from 'next-auth'
 import { db } from '../_lib/prisma'
-import ContentWrapper from './_components/contentWrapper'
+
 import { authOptions } from '../api/auth/[...nextauth]/route'
+import { LoginCard } from './_components/loginCard'
+import PageBody from './_components/pageBody'
 
 export default async function Home() {
-  const users = await db.user.findMany({})
   const session = await getServerSession(authOptions)
-  const sessionId = session?.user.id
 
-  const createBankAccount = await db.user.findUnique({
-    where: {
-      id: sessionId,
-    },
-    include: {
-      bankAccount: true,
-    },
-  })
+  if (session) {
+    const sessionId = session?.user.id
 
-  console.log(createBankAccount, 'aqui o console')
+    const userClient = await db.user.findUnique({
+      where: {
+        id: sessionId,
+      },
+      include: {
+        bankAccount: {
+          include: {
+            destinationTransaction: true,
+            sourceTransaction: true,
+          },
+        },
+      },
+    })
 
-  return (
-    <>
+    console.log(session, 'aqui')
+
+    return (
       <div className="flex justify-center items-center w-full h-full">
-        <ContentWrapper users={users} />
+        {session ? (
+          <PageBody userClient={userClient} />
+        ) : (
+          <div className="w-full max-w-[1120px] mt-8 flex justify-center items-center">
+            <LoginCard />
+          </div>
+        )}
       </div>
-    </>
-  )
+    )
+  }
 }

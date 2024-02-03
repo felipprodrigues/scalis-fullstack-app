@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '../../_components/ui/card'
 import { Input } from '../../_components/ui/input'
+import Link from 'next/link'
 
 export function LoginCard() {
   const handleLoginClick = async (e: any) => {
@@ -41,9 +42,11 @@ export function LoginCard() {
           </div>
         </form>
         <div>
-          <p className="text-xs hover:underline cursor-pointer mt-3 text-right text-gray-500">
-            Forgot password?
-          </p>
+          <Link href="/" onClick={() => alert('You have been redirected')}>
+            <p className="text-xs hover:underline cursor-pointer mt-3 text-right text-gray-500">
+              Forgot password?
+            </p>
+          </Link>
         </div>
       </CardContent>
       <CardFooter className="flex  flex-col gap-4">

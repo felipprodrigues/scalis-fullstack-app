@@ -6,9 +6,24 @@ import { LoginCard } from './loginCard'
 
 import AccountBalanceCard from './accountBalanceCard'
 import Table from '@/app/_components/table'
+import { db } from '@/app/_lib/prisma'
+import { useEffect } from 'react'
 
-export default function ContentWrapper() {
+export default function ContentWrapper({ users }: any) {
   const session = useSession()
+
+  const createUserBankAccount = async () => {
+    const createBankAccount = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        bankAccount: true,
+      },
+    })
+
+    return createBankAccount
+  }
 
   return (
     <>

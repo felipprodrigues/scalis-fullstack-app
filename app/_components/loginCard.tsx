@@ -1,22 +1,19 @@
 'use client'
 
 import { signIn } from 'next-auth/react'
-import { Button } from '../../_components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '../../_components/ui/card'
-import { Input } from '../../_components/ui/input'
+import { Button } from './ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
+import { Input } from './ui/input'
 import Link from 'next/link'
+import { useStore } from 'zustand'
+import LoginButton from './loginButton'
+import { useRouter } from 'next/navigation'
 
-export function LoginCard() {
-  const handleLoginClick = async (e: any) => {
-    e.preventDefault()
+export function LoginCard({ session }: any) {
+  const router = useRouter()
 
-    await signIn()
+  if (session) {
+    router.push('/dashboard')
   }
 
   return (
@@ -42,7 +39,7 @@ export function LoginCard() {
           </div>
         </form>
         <div>
-          <Link href="/" onClick={() => alert('You have been redirected')}>
+          <Link href="/">
             <p className="text-xs hover:underline cursor-pointer mt-3 text-right text-gray-500">
               Forgot password?
             </p>
@@ -51,12 +48,12 @@ export function LoginCard() {
       </CardContent>
       <CardFooter className="flex  flex-col gap-4">
         <div className="w-full">
-          <Button className="w-full">Sign in</Button>
+          <Button className="w-full" onClick={() => signIn()}>
+            Sign in
+          </Button>
         </div>
 
-        <Button variant="outline" onClick={(e) => handleLoginClick(e)}>
-          Login with Google
-        </Button>
+        <LoginButton />
       </CardFooter>
     </Card>
   )

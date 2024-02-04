@@ -21,8 +21,6 @@ export const authOptions: AuthOptions = {
       }
     },
     async signIn({ user }) {
-      console.log(user.id, 'id 123123')
-
       const userBankAccounts = await db.bankAccount.findMany({
         where: {
           userId: user.id,

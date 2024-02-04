@@ -1,34 +1,38 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-async-client-component */
-'use client'
-
-import { LoginCard } from './loginCard'
 
 import AccountBalanceCard from './accountBalanceCard'
 import Table from '@/app/_components/table'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
-import { getServerSession } from 'next-auth'
-import { signOut, useSession } from 'next-auth/react'
-import { db } from '@/app/_lib/prisma'
-import { Button } from '@/app/_components/ui/button'
 
-interface UserClientProps {
-  id: string
-  name: string | null
-  email: string | null
-  emailVerified?: null
-  image: string | null
+import { useSession } from 'next-auth/react'
+
+import { useStore } from '../zustand-store/store'
+import { useEffect } from 'react'
+import { db } from '../_lib/prisma'
+import { getServerSession } from 'next-auth'
+import { GetStaticProps } from 'next'
+import { getServerSideProps } from 'next/dist/build/templates/pages'
+import { authOptions } from '../api/auth/[...nextauth]/route'
+
+interface MainProps {
+  accountId: string
+  userId: string
+  accountType: string
+  accountNumber: string
 }
 
-export default function PageBody() {
-  const session = useSession()
+export async function Main({ session }: any) {
+  const userBankAccount = await db.bankAccount.findMany({
+    where: {
+      userId: session?.user.id,
+    },
+  })
 
-  const user = session.data?.user
-
+  console.log(userBankAccount, 'aqui')
   return (
     <>
       <div className="w-full max-w-[1120px] relative">
-        <div className="absolute top-[-50px] w-full flex flex-col gap-8">
-          <Button onClick={() => signOut()}>Sair</Button>
+        <div className="absolute top-[-.5rem] w-full flex flex-col gap-8">
           <div>
             <span className="text-xs text-gray-100">Saving | 1457-8</span>
             <div className="grid grid-cols-3 gap-8">
@@ -71,7 +75,7 @@ export default function PageBody() {
             </div>
           </div>
 
-          <Table />
+          <Table userBankAccount={userBankAccount} />
         </div>
       </div>
     </>

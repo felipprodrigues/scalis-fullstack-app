@@ -7,8 +7,6 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerDescription,
-  DrawerFooter,
-  DrawerClose,
 } from './ui/drawer'
 
 interface DrawerComponentProps {
@@ -23,10 +21,10 @@ export function DrawerComponent({
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="outline">Open Drawer</Button>
+        <Button variant="outline">New Transaction</Button>
       </DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm p-4">
+        <div className="mx-auto w-full max-w-sm p-4 mb-6">
           <DrawerHeader className="flex gap-6 flex-col">
             <DrawerTitle className="text-center">
               Select a banking transaction type
@@ -68,11 +66,6 @@ export function DrawerComponent({
               />
             )}
           </div>
-          <DrawerFooter>
-            <DrawerClose asChild>
-              <Button variant="outline">Close</Button>
-            </DrawerClose>
-          </DrawerFooter>
         </div>
       </DrawerContent>
     </Drawer>

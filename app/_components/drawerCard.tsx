@@ -7,20 +7,20 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 
 import useStore from '../zustand-store/store'
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-  SelectGroup,
-} from '../_components/ui/select'
+
+import { RadioGroup } from '../_components/ui/radio-group'
+import { Label } from '../_components/ui/label'
 
 const drawerInputSchema = z.object({
   origin: z.string(),
   destine: z.string(),
-  value: z.string(),
-  accountType: z.string(),
+  value: z.string().refine((val) => !isNaN(Number(val)), {
+    message: 'Value must be a number',
+  }),
+  depositTo: z.string(),
+  withdrawalFrom: z.string(),
+  transferFrom: z.string(),
+  transferTo: z.string(),
 })
 
 type DrawerInputData = z.infer<typeof drawerInputSchema>
@@ -29,13 +29,23 @@ interface DrawerCardProps {
   transactionType: string | boolean
 }
 
-export default function DrawerCard({ transactionType }: DrawerCardProps) {
+const DrawerCard = ({ transactionType }: DrawerCardProps) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<DrawerInputData>()
+  } = useForm<DrawerInputData>({
+    defaultValues: {
+      origin: '',
+      destine: '',
+      value: '',
+      depositTo: '',
+      withdrawalFrom: '',
+      transferFrom: '',
+      transferTo: '',
+    },
+  })
 
   const { userAccounts } = useStore((store) => {
     return {
@@ -43,30 +53,25 @@ export default function DrawerCard({ transactionType }: DrawerCardProps) {
     }
   })
 
-  // console.log(userAccounts, 'drawer component')
-
   const onFormSubmit: SubmitHandler<DrawerInputData> = (data) => {
-    // console.log(transactionType, 'tipo')
-    console.log(data, 'aqui o data')
+    if (
+      (data.transferFrom === 'fromChecking' &&
+        data.transferTo === 'toChecking') ||
+      (data.transferFrom === 'fromSaving' && data.transferTo === 'toSaving')
+    ) {
+      alert('You must select different bank accounts')
+      return
+    }
 
+    if (isNaN(Number(data.value))) {
+      alert('It must be a number only')
+      return
+    }
+
+    console.log(data, 'aqui')
     reset()
   }
 
-  // console.log(session.data?.user.id, 'aqio')
-  // findMany tabela bankAccounts
-
-  // filtrar pelo userID
-  // pegar os ID's das contas
-
-  // adicionar select
-  // selecionar
-  //
-  // iterar options
-
-  // label - accountNumber
-  // value -
-
-  // console.log(transactionType, 'aqui')
   return (
     <Card>
       <CardHeader>
@@ -81,53 +86,130 @@ export default function DrawerCard({ transactionType }: DrawerCardProps) {
           className="flex flex-col  justify-between h-full"
         >
           <div className="grid w-full items-center gap-4 p-0">
-            {transactionType === 'Transfer' && (
-              <>
-                <div className="flex flex-col space-y-1.5">
-                  <Input
-                    placeholder="origin account"
-                    {...register('origin', { required: true })}
-                  />
-                </div>
-                <div className="flex flex-col space-y-1.5">
-                  <Input
-                    placeholder="destination account"
-                    {...register('destine', { required: true })}
-                  />
-                </div>
-              </>
-            )}
-
             {transactionType === 'Deposit' && (
-              <div className="flex flex-col space-y-1.5">
-                <Select {...register('accountType')}>
-                  <SelectTrigger className="w-[280px]">
-                    <SelectValue placeholder="Select account type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {userAccounts &&
-                        userAccounts.map((account: any) => (
-                          <SelectItem
-                            value={account.accountNumber}
-                            key={account.accountType}
-                          >
-                            {account.accountType} | {account.accountNumber}
-                          </SelectItem>
-                        ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-gray-500 font-bold">To:</span>
+                <RadioGroup className="flex justify-between space-y-1.5">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="checking"
+                      id="checking"
+                      {...register('depositTo', {
+                        required: 'Please select one option',
+                      })}
+                    />
+                    <Label htmlFor="checking">Checking</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="saving"
+                      id="saving"
+                      {...register('depositTo', {
+                        required: 'Please select one option',
+                      })}
+                    />
+                    <Label htmlFor="saving">Saving</Label>
+                  </div>
+                </RadioGroup>
               </div>
             )}
 
             {transactionType === 'Withdraw' && (
-              <div className="flex flex-col space-y-1.5">
-                <Input
-                  placeholder="origin account"
-                  {...register('origin', { required: true })}
-                />
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-gray-500 font-bold">From:</span>
+                <RadioGroup className="flex justify-between space-y-1.5">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="checking"
+                      id="checking"
+                      {...register('withdrawalFrom', {
+                        required: 'Please select one option',
+                      })}
+                    />
+                    <Label htmlFor="checking">Checking</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="saving"
+                      id="saving"
+                      {...register('withdrawalFrom', {
+                        required: 'Please select one option',
+                      })}
+                    />
+                    <Label htmlFor="saving">Saving</Label>
+                  </div>
+                </RadioGroup>
               </div>
+            )}
+
+            {transactionType === 'Transfer' && (
+              <>
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm text-gray-500 font-bold">From:</span>
+                  <RadioGroup
+                    defaultValue="option-one"
+                    className="flex justify-between space-y-1.5"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        value="fromChecking"
+                        id="fromChecking"
+                        {...register('transferFrom', {
+                          required: 'Please select one option',
+                        })}
+                      />
+                      <Label htmlFor="fromChecking">Checking</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        value="fromSaving"
+                        id="fromSaving"
+                        {...register('transferFrom', {
+                          required: 'Please select one option',
+                        })}
+                      />
+                      <Label htmlFor="fromSaving">Saving</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm text-gray-500 font-bold">To:</span>
+                  <RadioGroup
+                    defaultValue="option-one"
+                    className="flex justify-between space-y-1.5"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        value="toChecking"
+                        id="toChecking"
+                        {...register('transferTo', {
+                          required: 'Please select one option',
+                        })}
+                      />
+                      <Label htmlFor="toChecking">Checking</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        value="toSaving"
+                        id="toSaving"
+                        {...register('transferTo', {
+                          required: 'Please select one option',
+                        })}
+                      />
+                      <Label htmlFor="toSaving">Saving</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              </>
             )}
 
             <div className="flex flex-col space-y-1.5">
@@ -138,7 +220,7 @@ export default function DrawerCard({ transactionType }: DrawerCardProps) {
             </div>
           </div>
 
-          <Button type="submit" className="mt-4">
+          <Button type="submit" className="mt-4" disabled={isSubmitting}>
             Submit
           </Button>
         </form>
@@ -146,3 +228,5 @@ export default function DrawerCard({ transactionType }: DrawerCardProps) {
     </Card>
   )
 }
+
+export default DrawerCard

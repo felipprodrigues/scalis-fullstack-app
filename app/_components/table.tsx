@@ -1,7 +1,6 @@
 'use client'
 import React, { useEffect } from 'react'
 import useStore from '../zustand-store/store'
-// import { priceFormatter } from '../_utils/formatters'
 
 export default function Table({ userBankAccount }: any) {
   const { getUserAccount, userAccounts } = useStore((store) => {
@@ -14,7 +13,7 @@ export default function Table({ userBankAccount }: any) {
   useEffect(() => {
     getUserAccount(userBankAccount)
   }, [])
-  
+
   console.log(userAccounts, 'aqui na table')
 
   const tableHead = [
@@ -84,7 +83,6 @@ export default function Table({ userBankAccount }: any) {
             03/25/2024
           </td>
         </tr>
-        {/* Additional rows... */}
       </tbody>
     </table>
   )

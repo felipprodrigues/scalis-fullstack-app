@@ -9,7 +9,7 @@ interface BankAccount {
 
 export interface CategoryProps {
   getUserAccount: (session: BankAccount) => void
-  userAccounts: BankAccount
+  userAccounts: BankAccount | null
 }
 
 const useStore = create<CategoryProps>((set) => {
@@ -17,7 +17,7 @@ const useStore = create<CategoryProps>((set) => {
     userAccounts: null,
 
     getUserAccount: async (session) => {
-      console.log(session, 'aqui porra')
+      console.log(session, 'session from zustand here')
 
       set({ userAccounts: session })
     },

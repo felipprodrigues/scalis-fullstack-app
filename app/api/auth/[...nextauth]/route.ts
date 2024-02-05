@@ -44,10 +44,8 @@ export const authOptions: AuthOptions = {
               accountNumber: generateRandomBankAccount(),
             },
           })
-
-          console.log('Congratz! Now we have your soul!')
         } catch (error) {
-          console.log(error, 'aqui o erro')
+          console.log(error, 'error redirecting user')
         }
       }
 

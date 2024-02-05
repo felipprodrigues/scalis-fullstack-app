@@ -12,11 +12,13 @@ import {
 interface DrawerComponentProps {
   handleSelectTransferType: (value: string) => void
   selectedType: string | undefined
+
 }
 
 export function DrawerComponent({
   selectedType,
   handleSelectTransferType,
+
 }: DrawerComponentProps) {
   return (
     <Drawer>
@@ -54,15 +56,8 @@ export function DrawerComponent({
           <div className="max-w-[355px] w-full p-4">
             {selectedType && (
               <DrawerCard
-                transactionType={
-                  selectedType === 'transfer'
-                    ? 'Transfer'
-                    : selectedType === 'deposit'
-                    ? 'Deposit'
-                    : selectedType === 'withdraw'
-                    ? 'Withdraw'
-                    : ''
-                }
+                transactionType={selectedType}
+
               />
             )}
           </div>

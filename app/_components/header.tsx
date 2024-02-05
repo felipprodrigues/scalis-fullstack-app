@@ -27,13 +27,13 @@ export function Header() {
               className="mix-blend-multiply"
             />
 
-            <Button
+            {/* <Button
               variant="outline"
               className="bg-transparent text-gray-200"
               onClick={() => signOut()}
             >
               Logout
-            </Button>
+            </Button> */}
 
             <DrawerComponent
               selectedType={selectedType}

@@ -3,16 +3,8 @@
 
 import AccountBalanceCard from './accountBalanceCard'
 import Table from '@/app/_components/table'
-
-import { useSession } from 'next-auth/react'
-
-import { useStore } from '../zustand-store/store'
-import { useEffect } from 'react'
 import { db } from '../_lib/prisma'
 import { getServerSession } from 'next-auth'
-import { GetStaticProps } from 'next'
-import { getServerSideProps } from 'next/dist/build/templates/pages'
-import { authOptions } from '../api/auth/[...nextauth]/route'
 
 interface MainProps {
   accountId: string
@@ -21,14 +13,21 @@ interface MainProps {
   accountNumber: string
 }
 
-export async function Main({ session }: any) {
-  const userBankAccount = await db.bankAccount.findMany({
+async function getUserBankAccounts() {
+  const session = await getServerSession()
+
+  const userBankAccounts = await db.bankAccount.findMany({
     where: {
       userId: session?.user.id,
     },
   })
 
-  console.log(userBankAccount, 'aqui')
+  return userBankAccounts
+}
+
+export async function Main() {
+  const userBankAccounts = await getUserBankAccounts()
+
   return (
     <>
       <div className="w-full max-w-[1120px] relative">
@@ -75,7 +74,7 @@ export async function Main({ session }: any) {
             </div>
           </div>
 
-          <Table userBankAccount={userBankAccount} />
+          <Table userBankAccounts={userBankAccounts} />
         </div>
       </div>
     </>

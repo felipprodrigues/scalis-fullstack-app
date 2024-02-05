@@ -8,18 +8,18 @@ interface BankAccount {
 }
 
 export interface CategoryProps {
-  getUserAccount: (session: BankAccount) => void
-  userAccounts: BankAccount | null
+  setUserAccounts: (bankAccounts: BankAccount[]) => void
+  userAccounts: BankAccount[]
 }
 
 const useStore = create<CategoryProps>((set) => {
   return {
-    userAccounts: null,
+    userAccounts: [],
 
-    getUserAccount: async (session) => {
-      console.log(session, 'session from zustand here')
+    setUserAccounts: async (bankAccounts) => {
+      console.log(bankAccounts, 'session from zustand here')
 
-      set({ userAccounts: session })
+      set({ userAccounts: bankAccounts })
     },
   }
 })

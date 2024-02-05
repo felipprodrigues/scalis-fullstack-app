@@ -11,64 +11,51 @@ import useStore from '../zustand-store/store'
 import { RadioGroup } from '../_components/ui/radio-group'
 import { Label } from '../_components/ui/label'
 
+import { api } from '../_lib/axios'
+
+
 const drawerInputSchema = z.object({
   origin: z.string(),
   destine: z.string(),
-  value: z.string().refine((val) => !isNaN(Number(val)), {
-    message: 'Value must be a number',
-  }),
-  depositTo: z.string(),
-  withdrawalFrom: z.string(),
-  transferFrom: z.string(),
-  transferTo: z.string(),
+  value: z.string(),
 })
 
 type DrawerInputData = z.infer<typeof drawerInputSchema>
 
 interface DrawerCardProps {
-  transactionType: string | boolean
+  transactionType: string
 }
 
-const DrawerCard = ({ transactionType }: DrawerCardProps) => {
+const DrawerCard = ({
+  transactionType,
+}:
+DrawerCardProps) => {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<DrawerInputData>({
     defaultValues: {
       origin: '',
       destine: '',
       value: '',
-      depositTo: '',
-      withdrawalFrom: '',
-      transferFrom: '',
-      transferTo: '',
     },
   })
 
-  const { userAccounts } = useStore((store) => {
-    return {
-      userAccounts: store.userAccounts,
-    }
-  })
+  const { userAccounts } = useStore()
 
-  const onFormSubmit: SubmitHandler<DrawerInputData> = (data) => {
-    if (
-      (data.transferFrom === 'fromChecking' &&
-        data.transferTo === 'toChecking') ||
-      (data.transferFrom === 'fromSaving' && data.transferTo === 'toSaving')
-    ) {
-      alert('You must select different bank accounts')
-      return
-    }
-
-    if (isNaN(Number(data.value))) {
-      alert('It must be a number only')
-      return
-    }
-
+  const onFormSubmit: SubmitHandler<DrawerInputData> = async (data) => {
     console.log(data, 'aqui')
+
+    const dataCollection = {
+      data,
+      userAccounts,
+      transactionType,
+    }
+
+    await api.post('/createTransaction', dataCollection)
+
     reset()
   }
 
@@ -86,7 +73,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
           className="flex flex-col  justify-between h-full"
         >
           <div className="grid w-full items-center gap-4 p-0">
-            {transactionType === 'Deposit' && (
+            {transactionType === 'deposit' && (
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-500 font-bold">To:</span>
                 <RadioGroup className="flex justify-between space-y-1.5">
@@ -95,7 +82,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
                       type="radio"
                       value="checking"
                       id="checking"
-                      {...register('depositTo', {
+                      {...register('destine', {
                         required: 'Please select one option',
                       })}
                     />
@@ -106,7 +93,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
                       type="radio"
                       value="saving"
                       id="saving"
-                      {...register('depositTo', {
+                      {...register('destine', {
                         required: 'Please select one option',
                       })}
                     />
@@ -116,7 +103,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
               </div>
             )}
 
-            {transactionType === 'Withdraw' && (
+            {transactionType === 'withdraw' && (
               <div className="flex flex-col gap-1">
                 <span className="text-sm text-gray-500 font-bold">From:</span>
                 <RadioGroup className="flex justify-between space-y-1.5">
@@ -125,7 +112,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
                       type="radio"
                       value="checking"
                       id="checking"
-                      {...register('withdrawalFrom', {
+                      {...register('origin', {
                         required: 'Please select one option',
                       })}
                     />
@@ -136,7 +123,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
                       type="radio"
                       value="saving"
                       id="saving"
-                      {...register('withdrawalFrom', {
+                      {...register('origin', {
                         required: 'Please select one option',
                       })}
                     />
@@ -146,7 +133,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
               </div>
             )}
 
-            {transactionType === 'Transfer' && (
+            {transactionType === 'transfer' && (
               <>
                 <div className="flex flex-col gap-1">
                   <span className="text-sm text-gray-500 font-bold">From:</span>
@@ -159,7 +146,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
                         type="radio"
                         value="fromChecking"
                         id="fromChecking"
-                        {...register('transferFrom', {
+                        {...register('origin', {
                           required: 'Please select one option',
                         })}
                       />
@@ -170,7 +157,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
                         type="radio"
                         value="fromSaving"
                         id="fromSaving"
-                        {...register('transferFrom', {
+                        {...register('origin', {
                           required: 'Please select one option',
                         })}
                       />
@@ -190,7 +177,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
                         type="radio"
                         value="toChecking"
                         id="toChecking"
-                        {...register('transferTo', {
+                        {...register('destine', {
                           required: 'Please select one option',
                         })}
                       />
@@ -201,7 +188,7 @@ const DrawerCard = ({ transactionType }: DrawerCardProps) => {
                         type="radio"
                         value="toSaving"
                         id="toSaving"
-                        {...register('transferTo', {
+                        {...register('destine', {
                           required: 'Please select one option',
                         })}
                       />

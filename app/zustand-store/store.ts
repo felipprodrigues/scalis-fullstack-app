@@ -17,8 +17,6 @@ const useStore = create<CategoryProps>((set) => {
     userAccounts: [],
 
     setUserAccounts: async (bankAccounts) => {
-      console.log(bankAccounts, 'session from zustand here')
-
       set({ userAccounts: bankAccounts })
     },
   }

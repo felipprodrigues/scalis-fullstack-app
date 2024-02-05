@@ -6,13 +6,10 @@ import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 
-import useStore from '../zustand-store/store'
-
 import { RadioGroup } from '../_components/ui/radio-group'
 import { Label } from '../_components/ui/label'
 
 import { api } from '../_lib/axios'
-
 
 const drawerInputSchema = z.object({
   origin: z.string(),
@@ -24,12 +21,10 @@ type DrawerInputData = z.infer<typeof drawerInputSchema>
 
 interface DrawerCardProps {
   transactionType: string
+  accountSession: any
 }
 
-const DrawerCard = ({
-  transactionType,
-}:
-DrawerCardProps) => {
+const DrawerCard = ({ transactionType, accountSession }: DrawerCardProps) => {
   const {
     register,
     handleSubmit,
@@ -43,14 +38,12 @@ DrawerCardProps) => {
     },
   })
 
-  const { userAccounts } = useStore()
+  // const { userAccounts } = useStore()
 
   const onFormSubmit: SubmitHandler<DrawerInputData> = async (data) => {
-    console.log(data, 'aqui')
-
     const dataCollection = {
       data,
-      userAccounts,
+      userAccounts: accountSession,
       transactionType,
     }
 
@@ -144,7 +137,7 @@ DrawerCardProps) => {
                     <div className="flex items-center space-x-2">
                       <input
                         type="radio"
-                        value="fromChecking"
+                        value="checking"
                         id="fromChecking"
                         {...register('origin', {
                           required: 'Please select one option',
@@ -155,7 +148,7 @@ DrawerCardProps) => {
                     <div className="flex items-center space-x-2">
                       <input
                         type="radio"
-                        value="fromSaving"
+                        value="saving"
                         id="fromSaving"
                         {...register('origin', {
                           required: 'Please select one option',
@@ -175,7 +168,7 @@ DrawerCardProps) => {
                     <div className="flex items-center space-x-2">
                       <input
                         type="radio"
-                        value="toChecking"
+                        value="checking"
                         id="toChecking"
                         {...register('destine', {
                           required: 'Please select one option',
@@ -186,7 +179,7 @@ DrawerCardProps) => {
                     <div className="flex items-center space-x-2">
                       <input
                         type="radio"
-                        value="toSaving"
+                        value="saving"
                         id="toSaving"
                         {...register('destine', {
                           required: 'Please select one option',

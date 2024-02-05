@@ -1,8 +1,8 @@
 import { db } from '@/app/_lib/prisma'
 import { request } from 'http'
+
 import { NextApiRequest, NextApiResponse } from 'next'
 import { NextResponse } from 'next/server'
-import { resolve } from 'path/win32'
 
 export async function POST(request: NextApiRequest, response: NextApiResponse) {
   if (request.method !== 'POST') {
@@ -11,13 +11,10 @@ export async function POST(request: NextApiRequest, response: NextApiResponse) {
   const res = await request.json()
 
   const { data, userAccounts, transactionType } = res
-  console.log(data)
-  console.log(userAccounts)
-  console.log(transactionType)
 
   if (
-    (data.origin === 'fromChecking' && data.destine === 'toChecking') ||
-    (data.origin === 'fromSaving' && data.destine === 'toSaving')
+    (data.origin === 'checking' && data.destine === 'checking') ||
+    (data.origin === 'saving' && data.destine === 'saving')
   ) {
     return response
       .status(400)
@@ -30,8 +27,6 @@ export async function POST(request: NextApiRequest, response: NextApiResponse) {
 
   const { origin, destine } = data
 
-  // console.log(userAccounts, 'aqui as contas')
-
   const userOriginAccount = userAccounts.find(
     (account: { accountType: any }) => account.accountType === origin
   )
@@ -42,8 +37,9 @@ export async function POST(request: NextApiRequest, response: NextApiResponse) {
 
   const userOriginAccountId = userOriginAccount?.accountId
   const userDestineAccountId = userDestineAccount?.accountId
-  // console.log(userOriginAccountId)
-  console.log(userDestineAccountId)
+
+  console.log(userDestineAccountId, 'conta destino')
+  console.log(userDestineAccountId, 'conta origem')
 
   const currencyConverter = Math.trunc(Number(data.value) * 100)
   console.log(currencyConverter, 'aqui')
@@ -52,29 +48,36 @@ export async function POST(request: NextApiRequest, response: NextApiResponse) {
     //@ WITHDRAW
     await db.transaction.create({
       data: {
-        transactionAccountId: userOriginAccountId,
-        // destinationAccountId String? // destino da transação
+        transactionAccountId: userOriginAccountId, //transaction origin
+        // destinationAccountId String? // transaction destination
         amount: currencyConverter,
         transactionType,
       },
     })
   }
 
-  if (transactionType === 'deposit')
+  if (transactionType === 'deposit') {
     //@ DEPOSIT
-    // console.log(userDestineAccount, 'depoisto do useraccount')
-
     await db.transaction.create({
       data: {
-        // transactionAccountId: ,
-        destinationAccountId: userDestineAccountId, // destino da transação
+        // transactionAccountId: , //transaction origin
+        destinationAccountId: userDestineAccountId, // transaction destination
         amount: currencyConverter,
         transactionType,
       },
     })
+  }
 
-    if (transactionType === 'deposit') {
-      
-    }
-      return NextResponse.json({ data: request })
+  if (transactionType === 'transfer') {
+    await db.transaction.create({
+      data: {
+        transactionAccountId: userOriginAccountId, //transaction origin
+        destinationAccountId: userDestineAccountId, // transaction destination
+        amount: currencyConverter,
+        transactionType,
+      },
+    })
+  }
+
+  return NextResponse.json({ data: request })
 }

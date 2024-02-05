@@ -20,6 +20,10 @@ async function getUserBankAccounts() {
     where: {
       userId: session?.user.id,
     },
+    include: {
+      sourceTransaction: true,
+      destinationTransaction: true,
+    },
   })
 
   return userBankAccounts

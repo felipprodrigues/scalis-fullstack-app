@@ -6,8 +6,9 @@ import { signOut, useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { Button } from './ui/button'
 import { DrawerComponent } from './drawerComponent'
+import { CreateAccountModal } from './createAccountModal'
 
-export function Header() {
+export function Header({ accountSession }: any) {
   const [selectedType, setSelectedType] = useState<string | undefined>('')
 
   const session = useSession()
@@ -27,17 +28,18 @@ export function Header() {
               className="mix-blend-multiply"
             />
 
-            {/* <Button
+            <CreateAccountModal session={session} />
+            <Button
               variant="outline"
               className="bg-transparent text-gray-200"
               onClick={() => signOut()}
             >
               Logout
-            </Button> */}
-
+            </Button>
             <DrawerComponent
               selectedType={selectedType}
               handleSelectTransferType={handleSelectTransferType}
+              accountSession={accountSession}
             />
           </div>
         </header>

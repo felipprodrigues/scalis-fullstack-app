@@ -49,7 +49,7 @@ export const authOptions: AuthOptions = {
         }
       }
 
-      console.log(userBankAccounts, 'sign in ')
+      // console.log(userBankAccounts, 'sign in ')
       return true
     },
   },

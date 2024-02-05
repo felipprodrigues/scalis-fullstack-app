@@ -5,17 +5,10 @@ import { Button } from './ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { Input } from './ui/input'
 import Link from 'next/link'
-import { useStore } from 'zustand'
+
 import LoginButton from './loginButton'
-import { useRouter } from 'next/navigation'
 
-export function LoginCard({ session }: any) {
-  const router = useRouter()
-
-  if (session) {
-    router.push('/dashboard')
-  }
-
+export function LoginCard() {
   return (
     <Card className="w-[350px]">
       <CardHeader>

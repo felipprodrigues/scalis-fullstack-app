@@ -5,6 +5,8 @@ import AccountBalanceCard from './accountBalanceCard'
 import Table from '@/app/_components/table'
 import { db } from '../_lib/prisma'
 import { getServerSession } from 'next-auth'
+import { Button } from './ui/button'
+import { useState } from 'react'
 
 interface MainProps {
   accountId: string
@@ -14,6 +16,7 @@ interface MainProps {
 }
 
 async function getUserBankAccounts() {
+  
   const session = await getServerSession()
 
   const userBankAccounts = await db.bankAccount.findMany({

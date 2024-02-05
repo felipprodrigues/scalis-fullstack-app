@@ -2,19 +2,17 @@
 import React, { useEffect } from 'react'
 import useStore from '../zustand-store/store'
 
-export default function Table({ userBankAccount }: any) {
-  const { getUserAccount, userAccounts } = useStore((store) => {
+export default function Table({ userBankAccounts }: any) {
+  const { setUserAccounts, userAccounts } = useStore((store) => {
     return {
-      getUserAccount: store.getUserAccount,
+      setUserAccounts: store.setUserAccounts,
       userAccounts: store.userAccounts,
     }
   })
 
   useEffect(() => {
-    getUserAccount(userBankAccount)
+    setUserAccounts(userBankAccounts)
   }, [])
-
-  console.log(userAccounts, 'aqui na table')
 
   const tableHead = [
     'Source Acc',

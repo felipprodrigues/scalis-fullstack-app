@@ -1,5 +1,5 @@
 import { db } from '@/app/_lib/prisma'
-import { generateRandomBankAccount } from '@/app/_utils/formatters'
+// import { generateRandomBankAccount } from '@/app/_utils/formatters'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import NextAuth, { AuthOptions } from 'next-auth'
 import { Adapter } from 'next-auth/adapters'
@@ -14,45 +14,61 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      return {
-        ...session,
-        user,
+    async jwt({ token, account }) {
+      console.log(token, 'token')
+
+      if (account) {
+        token.accessToken = token.access_token
       }
+      return token
     },
-    async signIn({ user }) {
-      const userBankAccounts = await db.bankAccount.findMany({
-        where: {
-          userId: user.id,
-        },
-      })
-
-      if (!userBankAccounts.length) {
-        try {
-          await db.bankAccount.create({
-            data: {
-              userId: user.id,
-              accountType: 'saving',
-              accountNumber: generateRandomBankAccount(),
-            },
-          })
-
-          await db.bankAccount.create({
-            data: {
-              userId: user.id,
-              accountType: 'checking',
-              accountNumber: generateRandomBankAccount(),
-            },
-          })
-        } catch (error) {
-          console.log(error, 'error redirecting user')
-        }
+    async session({ session, token, user }) {
+      if (user) {
+        session.user.id = user.id
+        token
+        user
       }
 
-      // console.log(userBankAccounts, 'sign in ')
-      return true
+      console.log(session, 'dentro da api')
+      return session
     },
   },
+  // secret: process.env.NEXTAUTH_SECRET,
+  // session: {
+  //   strategy: 'jwt',
+  // },
+  // async signIn({ user }) {
+  //   const userBankAccounts = await db.bankAccount.findMany({
+  //     where: {
+  //       userId: user.id,
+  //     },
+  //   })
+
+  //   if (!userBankAccounts.length) {
+  //     try {
+  //       await db.bankAccount.create({
+  //         data: {
+  //           userId: user.id,
+  //           accountType: 'saving',
+  //           accountNumber: generateRandomBankAccount(),
+  //         },
+  //       })
+
+  //       await db.bankAccount.create({
+  //         data: {
+  //           userId: user.id,
+  //           accountType: 'checking',
+  //           accountNumber: generateRandomBankAccount(),
+  //         },
+  //       })
+  //     } catch (error) {
+  //       console.log(error, 'error redirecting user')
+  //     }
+  //   }
+
+  // console.log(userBankAccounts, 'sign in ')
+  // return true
+  // },
 }
 
 const handler = NextAuth(authOptions)

@@ -12,13 +12,13 @@ import {
 interface DrawerComponentProps {
   handleSelectTransferType: (value: string) => void
   selectedType: string | undefined
-  accountSession: any
+  userAccountData: any
 }
 
 export function DrawerComponent({
   selectedType,
   handleSelectTransferType,
-  accountSession,
+  userAccountData,
 }: DrawerComponentProps) {
   return (
     <Drawer>
@@ -57,7 +57,7 @@ export function DrawerComponent({
             {selectedType && (
               <DrawerCard
                 transactionType={selectedType}
-                accountSession={accountSession}
+                userAccountData={userAccountData}
               />
             )}
           </div>

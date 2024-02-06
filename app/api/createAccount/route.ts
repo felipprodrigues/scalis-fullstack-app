@@ -9,9 +9,9 @@ export async function POST(request: NextApiRequest) {
   // }
   const res = await request.json()
 
-  console.log(res, 'aqui o res da nova requisição')
+  // console.log(res, 'aqui o res da nova requisição')
   const userId = res
-  console.log(userId)
+  console.log(userId, 'id do usuário para criação de conta')
 
   const userBankAccounts = await db.bankAccount.findMany({
     where: {

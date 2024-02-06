@@ -7,27 +7,14 @@ import { db } from '../_lib/prisma'
 import { getServerSession } from 'next-auth'
 
 interface MainProps {
-  authorizedUserId: string
+  userAccountData: any
+  authorizedUserId: any
 }
 
-async function getUserBankAccounts() {
-  const session = await getServerSession()
+export async function Main({ userAccountData, authorizedUserId }: MainProps) {
+  // const userBankAccounts = await getUserBankAccounts()
 
-  const userBankAccounts = await db.bankAccount.findMany({
-    where: {
-      userId: session?.user.id,
-    },
-    include: {
-      sourceTransaction: true,
-      destinationTransaction: true,
-    },
-  })
-
-  return userBankAccounts
-}
-
-export async function Main(authorizedUserId: MainProps) {
-  const userBankAccounts = await getUserBankAccounts()
+  console.log(userAccountData, 'aqui')
 
   return (
     <>
@@ -36,10 +23,10 @@ export async function Main(authorizedUserId: MainProps) {
           <BalanceCard cardName="Saving" />
           <BalanceCard cardName="Checking" />
 
-          <Table
-            userBankAccounts={userBankAccounts}
+          {/* <Table
+            userAccountData={userAccountData}
             authorizedUserId={authorizedUserId}
-          />
+          /> */}
         </div>
       </div>
     </>

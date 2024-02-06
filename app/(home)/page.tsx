@@ -18,19 +18,9 @@ async function getUserAuthorization() {
 }
 
 async function getUserBankAccounts() {
-  const session = await getServerSession(authOptions)
+  const session = await getUserAuthorization()
 
-  console.log(session, 'nah ome')
-
-  const user = await db.user.findFirst({
-    where: {
-      id: session?.user.id,
-    },
-  })
-
-  console.log(user, 'aqui o user')
-
-  //! clsa7asry000ifys6esq4u2g7 - usuário encontrado
+  console.log(session?.user.id, 'aqui o usuário')
 
   const userBankAccounts = await db.bankAccount.findMany({
     where: {
@@ -42,32 +32,29 @@ async function getUserBankAccounts() {
     },
   })
 
-  return userBankAccounts
+  console.log(userBankAccounts, 'initial page - contas do usuário logado')
+
+  return { userBankAccounts, session }
 }
 
 export default async function Home() {
   const userAuthorized = await getUserAuthorization()
-  const accountSession = await getUserBankAccounts()
-
-  const authorizedUserId = userAuthorized?.user.id
-
-  const fetchIdFromBankAccount = accountSession.map((account) => account.userId)
-  console.log(fetchIdFromBankAccount, 'session da conta bancária do usuário ')
-
-
-  console.log(authorizedUserId, 'user autorizado ')
+  const userAccountData = await getUserBankAccounts()
 
   return (
     <>
       <Header
-        accountSession={accountSession}
-        authorizedUserId={authorizedUserId}
+        userAccountData={userAccountData}
+        authorizedUserId={userAuthorized}
       />
       <main className="flex justify-center items-center w-full h-full">
         {userAuthorized ? (
           <div className="w-full max-w-[1120px] relative">
             <div className="absolute top-[-50px] w-full flex flex-col gap-8">
-              <Main authorizedUserId={authorizedUserId} />
+              <Main
+                userAccountData={userAccountData}
+                authorizedUserId={userAuthorized}
+              />
             </div>
           </div>
         ) : (

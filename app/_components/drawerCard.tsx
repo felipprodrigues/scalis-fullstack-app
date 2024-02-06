@@ -21,10 +21,10 @@ type DrawerInputData = z.infer<typeof drawerInputSchema>
 
 interface DrawerCardProps {
   transactionType: string
-  accountSession: any
+  userAccountData: any
 }
 
-const DrawerCard = ({ transactionType, accountSession }: DrawerCardProps) => {
+const DrawerCard = ({ transactionType, userAccountData }: DrawerCardProps) => {
   const {
     register,
     handleSubmit,
@@ -41,7 +41,7 @@ const DrawerCard = ({ transactionType, accountSession }: DrawerCardProps) => {
   const onFormSubmit: SubmitHandler<DrawerInputData> = async (data) => {
     const dataCollection = {
       data,
-      userAccounts: accountSession,
+      userAccounts: userAccountData.userBankAccounts,
       transactionType,
     }
 

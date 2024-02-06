@@ -9,7 +9,7 @@ import { DrawerComponent } from './drawerComponent'
 import { CreateAccountModal } from './createAccountModal'
 import { api } from '../_lib/axios'
 
-export function Header({ accountSession }: any) {
+export function Header({ userAccountData }: any) {
   const [selectedType, setSelectedType] = useState<string | undefined>('')
   const [open, setOpen] = useState(false)
 
@@ -27,7 +27,7 @@ export function Header({ accountSession }: any) {
 
   // ACTION - CREATE DB BANK ACCOUNT
   const createBankAccount = async () => {
-    const userId = session?.data?.user.id
+    const userId = userAccountData.session.user.id
 
     try {
       await api.post('/createAccount', userId)
@@ -59,7 +59,7 @@ export function Header({ accountSession }: any) {
               Logout
             </Button>
 
-            {!accountSession.length ? (
+            {!userAccountData.userBankAccounts.length ? (
               <CreateAccountModal
                 open={open}
                 handleCloseModal={handleCloseModal}
@@ -70,7 +70,7 @@ export function Header({ accountSession }: any) {
               <DrawerComponent
                 selectedType={selectedType}
                 handleSelectTransferType={handleSelectTransferType}
-                accountSession={accountSession}
+                userAccountData={userAccountData}
               />
             )}
           </div>

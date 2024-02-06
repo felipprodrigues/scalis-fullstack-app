@@ -20,12 +20,13 @@ export default function Table({ userBankAccounts, authorizedUserId }: any) {
   const [isSelected, setIsSelected] = useState('saving')
   const [accounts, setAccounts] = useState<BankAccountProps[]>([])
 
-  const { setUserAccounts } = useStore((store) => {
-    return {
-      setUserAccounts: store.setUserAccounts,
-    }
-  })
+  // const { setUserAccounts } = useStore((store) => {
+  //   return {
+  //     setUserAccounts: store.setUserAccounts,
+  //   }
+  // })
 
+  // const findUserAccounts
   // console.log(userBankAccounts, 'aqui as contas do usuário')
   // console.log(authorizedUserId, 'authorized Id')
 
@@ -65,7 +66,7 @@ export default function Table({ userBankAccounts, authorizedUserId }: any) {
 
   // useEffect(() => {}, [accounts])
 
-  console.log(accounts, 'na table')
+  // console.log(accounts, 'na table')
 
   const tableHead = ['Source Acc', 'Dest. Acc', 'Transaction', 'Value', 'Date']
 

@@ -26,57 +26,79 @@ export async function POST(request: NextApiRequest, response: NextApiResponse) {
   }
 
   const { origin, destine } = data
+  // console.log(origin, 'os valores de origem estão aqui')
+  console.log(destine, 'os valores de destino estão aqui')
+  console.log(transactionType, 'tipoe de transação')
 
   const userOriginAccount = userAccounts.find(
     (account: { accountType: any }) => account.accountType === origin
   )
 
+  console.log(userOriginAccount, 'aqui')
+
   const userDestineAccount = userAccounts.find(
     (account: { accountType: any }) => account.accountType === destine
   )
 
-  const userOriginAccountId = userOriginAccount?.accountId
-  const userDestineAccountId = userDestineAccount?.accountId
-
-  console.log(userDestineAccountId, 'conta destino')
-  console.log(userDestineAccountId, 'conta origem')
+  console.log(userDestineAccount, 'conta de destino')
 
   const currencyConverter = Math.trunc(Number(data.value) * 100)
-  console.log(currencyConverter, 'aqui')
+
+  if (transactionType === 'deposit') {
+    try {
+      await db.transaction.create({
+        data: {
+          destinationAccountId: userDestineAccount.accountId, //transaction destination
+          amount: currencyConverter,
+          transactionType,
+        },
+      })
+
+      console.log(
+        `sucess! deposit created at ${userDestineAccount.userId} - ${userDestineAccount.accountType}`
+      )
+    } catch (e) {
+      console.log(e, 'erro')
+    }
+  }
 
   if (transactionType === 'withdraw') {
     //@ WITHDRAW
-    await db.transaction.create({
-      data: {
-        transactionAccountId: userOriginAccountId, //transaction origin
-        // destinationAccountId String? // transaction destination
-        amount: currencyConverter,
-        transactionType,
-      },
-    })
-  }
+    try {
+      await db.transaction.create({
+        data: {
+          transactionAccountId: userOriginAccount.accountId, // transaction origin
+          amount: currencyConverter,
+          transactionType,
+        },
+      })
 
-  if (transactionType === 'deposit') {
-    //@ DEPOSIT
-    await db.transaction.create({
-      data: {
-        // transactionAccountId: , //transaction origin
-        destinationAccountId: userDestineAccountId, // transaction destination
-        amount: currencyConverter,
-        transactionType,
-      },
-    })
+      console.log(
+        `sucess! withdraw created at ${userOriginAccount.userId} - ${userOriginAccount.accountType}`
+      )
+    } catch (error) {
+      console.log(`error registering withdraw`, error)
+    }
   }
 
   if (transactionType === 'transfer') {
-    await db.transaction.create({
-      data: {
-        transactionAccountId: userOriginAccountId, //transaction origin
-        destinationAccountId: userDestineAccountId, // transaction destination
-        amount: currencyConverter,
-        transactionType,
-      },
-    })
+    // @TRANSFER
+    try {
+      await db.transaction.create({
+        data: {
+          destinationAccountId: userDestineAccount.accountId, //transaction destination
+          transactionAccountId: userOriginAccount.accountId, // transaction origin
+          amount: currencyConverter,
+          transactionType,
+        },
+      })
+
+      console.log(
+        `sucess! transfer created at ${userOriginAccount.userId} - account ${userDestineAccount.accountType} and ${userOriginAccount.accountType}`
+      )
+    } catch (error) {
+      console.log(`error registering withdraw`, error)
+    }
   }
 
   return NextResponse.json({ data: request })

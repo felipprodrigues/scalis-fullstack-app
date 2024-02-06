@@ -9,18 +9,24 @@ import { Main } from '../_components/main'
 import { Header } from '../_components/header'
 import { db } from '../_lib/prisma'
 
-async function getSession() {
+async function getUserAuthorization() {
   const session = await getServerSession(authOptions)
 
   return session
 }
 
-async function getUserBankAccounts() {
+async function getUserBankAccounts(userAuthorized) {
   const session = await getServerSession()
+
+  // console.log(userAuthorized, 'aqui a session')
+
+  const user = await db.user.findMany()
+
+  // console.log(user, 'porrrrraaaa1 12312412')
 
   const userBankAccounts = await db.bankAccount.findMany({
     where: {
-      userId: session?.user.id,
+      userId: session?.user?.id,
     },
     include: {
       sourceTransaction: true,
@@ -32,16 +38,16 @@ async function getUserBankAccounts() {
 }
 
 export default async function Home() {
-  const userSession = await getSession()
-  const accountSession = await getUserBankAccounts()
+  const userAuthorized = await getUserAuthorization()
+  const accountSession = await getUserBankAccounts(userAuthorized)
 
-  console.log(accountSession, 'session da home ')
+  console.log(accountSession, 'session da conta ')
 
   return (
     <>
       <Header accountSession={accountSession} />
       <main className="flex justify-center items-center w-full h-full">
-        {userSession ? (
+        {userAuthorized ? (
           <div className="w-full max-w-[1120px] relative">
             <div className="absolute top-[-50px] w-full flex flex-col gap-8">
               <Main />

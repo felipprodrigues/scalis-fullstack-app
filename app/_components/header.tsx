@@ -17,6 +17,8 @@ export function Header({ accountSession }: any) {
     setSelectedType(value)
   }
 
+  // console.log(accountSession, 'aqui')
+
   return (
     <>
       {session.status === 'authenticated' ? (
@@ -28,7 +30,6 @@ export function Header({ accountSession }: any) {
               className="mix-blend-multiply"
             />
 
-            <CreateAccountModal session={session} />
             <Button
               variant="outline"
               className="bg-transparent text-gray-200"
@@ -36,11 +37,16 @@ export function Header({ accountSession }: any) {
             >
               Logout
             </Button>
+
+            {/* {!accountSession ? ( */}
+            <CreateAccountModal session={session} />
+            {/* ) : ( */}
             <DrawerComponent
               selectedType={selectedType}
               handleSelectTransferType={handleSelectTransferType}
               accountSession={accountSession}
             />
+            {/* )} */}
           </div>
         </header>
       ) : (

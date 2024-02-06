@@ -38,8 +38,6 @@ const DrawerCard = ({ transactionType, accountSession }: DrawerCardProps) => {
     },
   })
 
-  // const { userAccounts } = useStore()
-
   const onFormSubmit: SubmitHandler<DrawerInputData> = async (data) => {
     const dataCollection = {
       data,

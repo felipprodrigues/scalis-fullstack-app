@@ -1,7 +1,6 @@
 import { ArrowDownCircle, ArrowRightLeft, ArrowUpCircle } from 'lucide-react'
 import BankAccountProps from './table'
 import React from 'react'
-import { useEffect } from 'react'
 
 export const TransactionRow = ({
   account,
@@ -90,10 +89,10 @@ export const renderTransactions = (
     return parseColors[transactionType] || ''
   }
 
-  console.log(
-    accounts.map((account) => account),
-    'aqui as accounts'
-  )
+  // console.log(
+  //   accounts.map((account) => account),
+  //   'aqui as accounts'
+  // )
 
   return (
     <tbody>

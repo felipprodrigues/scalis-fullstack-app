@@ -3,21 +3,43 @@
 import logoImg from '../assets/logo.png'
 import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { DrawerComponent } from './drawerComponent'
 import { CreateAccountModal } from './createAccountModal'
+import { api } from '../_lib/axios'
 
 export function Header({ accountSession }: any) {
   const [selectedType, setSelectedType] = useState<string | undefined>('')
+  const [open, setOpen] = useState(false)
 
   const session = useSession()
 
+  // ACTION - HANDLE MODAL OPEN/CLOSE
+  const handleCloseModal = () => {
+    if (open) {
+      setOpen(() => !open)
+      document.location.reload()
+    }
+
+    setOpen(true)
+  }
+
+  // ACTION - CREATE DB BANK ACCOUNT
+  const createBankAccount = async () => {
+    const userId = session?.data?.user.id
+
+    try {
+      await api.post('/createAccount', userId)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  // ACTION - DRAWER COMPONENT
   const handleSelectTransferType = (value: string) => {
     setSelectedType(value)
   }
-
-  // console.log(accountSession, 'aqui')
 
   return (
     <>
@@ -29,7 +51,6 @@ export function Header({ accountSession }: any) {
               alt="logo-image"
               className="mix-blend-multiply"
             />
-
             <Button
               variant="outline"
               className="bg-transparent text-gray-200"
@@ -38,15 +59,20 @@ export function Header({ accountSession }: any) {
               Logout
             </Button>
 
-            {/* {!accountSession ? ( */}
-            <CreateAccountModal session={session} />
-            {/* ) : ( */}
-            <DrawerComponent
-              selectedType={selectedType}
-              handleSelectTransferType={handleSelectTransferType}
-              accountSession={accountSession}
-            />
-            {/* )} */}
+            {!accountSession.length ? (
+              <CreateAccountModal
+                open={open}
+                handleCloseModal={handleCloseModal}
+                session={session}
+                createBankAccount={createBankAccount}
+              />
+            ) : (
+              <DrawerComponent
+                selectedType={selectedType}
+                handleSelectTransferType={handleSelectTransferType}
+                accountSession={accountSession}
+              />
+            )}
           </div>
         </header>
       ) : (

@@ -1,4 +1,4 @@
-import { signOut } from 'next-auth/react'
+import { Session } from '@prisma/client'
 import { Button } from './ui/button'
 import {
   Dialog,
@@ -9,31 +9,25 @@ import {
   DialogDescription,
 } from './ui/dialog'
 import React from 'react'
-import { api } from '../_lib/axios'
 
-export function CreateAccountModal({ session }: any) {
+interface CreateAccountModalProps {
+  open: boolean
+  handleCloseModal: () => void
+  createBankAccount: () => void
+  session: any
+}
+
+export function CreateAccountModal({
+  session,
+  createBankAccount,
+  open,
+  handleCloseModal,
+}: CreateAccountModalProps) {
   const { name: userName } = session.data.user
-
-  const createBankAccount = async () => {
-    const userId = session?.data?.user.id
-    // console.log(userId, 'aqui')
-
-    try {
-      await api.post('/createAccount', userId)
-
-      // await fetch('/api/createAccount', {
-      //   method: 'POST',
-      //   headers: { 'Content-type': 'application/json' },
-      //   body: JSON.stringify({ userId }),
-      // })
-    } catch (e) {
-      console.log(e)
-    }
-  }
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={handleCloseModal}>
         <DialogTrigger asChild>
           <Button
             variant="outline"

@@ -7,10 +7,7 @@ import { db } from '../_lib/prisma'
 import { getServerSession } from 'next-auth'
 
 interface MainProps {
-  accountId: string
-  userId: string
-  accountType: string
-  accountNumber: string
+  authorizedUserId: string
 }
 
 async function getUserBankAccounts() {
@@ -29,7 +26,7 @@ async function getUserBankAccounts() {
   return userBankAccounts
 }
 
-export async function Main() {
+export async function Main(authorizedUserId: MainProps) {
   const userBankAccounts = await getUserBankAccounts()
 
   return (
@@ -39,7 +36,10 @@ export async function Main() {
           <BalanceCard cardName="Saving" />
           <BalanceCard cardName="Checking" />
 
-          <Table userBankAccounts={userBankAccounts} />
+          <Table
+            userBankAccounts={userBankAccounts}
+            authorizedUserId={authorizedUserId}
+          />
         </div>
       </div>
     </>

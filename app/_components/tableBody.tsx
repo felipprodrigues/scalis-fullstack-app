@@ -89,10 +89,10 @@ export const renderTransactions = (
     return parseColors[transactionType] || ''
   }
 
-  // console.log(
-  //   accounts.map((account) => account),
-  //   'aqui as accounts'
-  // )
+  console.log(
+    accounts.map((account) => account),
+    'aqui as table'
+  )
 
   return (
     <tbody>

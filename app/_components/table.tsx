@@ -13,9 +13,10 @@ export type BankAccountProps = {
   accountNumber: string
   sourceTransaction: Transaction[]
   destinationTransaction: Transaction[]
+  authorizedUserId: string
 }
 
-export default function Table({ userBankAccounts }: any) {
+export default function Table({ userBankAccounts, authorizedUserId }: any) {
   const [isSelected, setIsSelected] = useState('saving')
   const [accounts, setAccounts] = useState<BankAccountProps[]>([])
 
@@ -25,41 +26,46 @@ export default function Table({ userBankAccounts }: any) {
     }
   })
 
-  const fetchAccounts = () => {
-    const updatedAccounts = userBankAccounts
-      .filter((account: BankAccountProps) => account.accountType === isSelected)
-      .map((account: BankAccountProps) => {
-        const {
-          destinationTransaction,
-          sourceTransaction,
-          accountNumber,
-          accountType,
-        } = account
+  // console.log(userBankAccounts, 'aqui as contas do usuário')
+  // console.log(authorizedUserId, 'authorized Id')
 
-        const mergedTransactions = [
-          ...destinationTransaction,
-          ...sourceTransaction,
-        ]
+  // const fetchAccounts = () => {
+  //   const updatedAccounts = userBankAccounts
+  //     .filter((account: BankAccountProps) => account.accountType === isSelected)
+  //     .map((account: BankAccountProps) => {
+  //       const {
+  //         destinationTransaction,
+  //         sourceTransaction,
+  //         accountNumber,
+  //         accountType,
+  //       } = account
 
-        return {
-          accountNumber,
-          accountType,
-          transactions: mergedTransactions,
-        }
-      })
+  //       const mergedTransactions = [
+  //         ...destinationTransaction,
+  //         ...sourceTransaction,
+  //       ]
 
-    setAccounts(updatedAccounts)
-  }
+  //       return {
+  //         accountNumber,
+  //         accountType,
+  //         transactions: mergedTransactions,
+  //       }
+  //     })
 
-  useEffect(() => {
-    fetchAccounts()
-  }, [userBankAccounts, isSelected])
+  //   setAccounts(updatedAccounts)
+  // }
 
-  useEffect(() => {
-    setUserAccounts(userBankAccounts)
-  }, [])
+  // useEffect(() => {
+  //   fetchAccounts()
+  // }, [userBankAccounts, isSelected])
 
-  useEffect(() => {}, [accounts])
+  // useEffect(() => {
+  //   setUserAccounts(userBankAccounts)
+  // }, [])
+
+  // useEffect(() => {}, [accounts])
+
+  console.log(accounts, 'na table')
 
   const tableHead = ['Source Acc', 'Dest. Acc', 'Transaction', 'Value', 'Date']
 
@@ -95,7 +101,7 @@ export default function Table({ userBankAccounts }: any) {
             })}
           </tr>
         </thead>
-        {renderTransactions(accounts, isSelected)}
+        {/* {renderTransactions(accounts, isSelected)} */}
       </table>
     </div>
   )

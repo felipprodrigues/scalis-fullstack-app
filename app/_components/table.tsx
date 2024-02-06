@@ -3,62 +3,63 @@
 import React, { useEffect, useState } from 'react'
 import useStore from '../zustand-store/store'
 import { Button } from './ui/button'
-import { Account, BankAccount } from '@prisma/client'
+import { Account, Transaction } from '@prisma/client'
 import { renderTransactions } from './tableBody'
+
+export type BankAccountProps = {
+  accountId: string
+  userId: string
+  accountType: string
+  accountNumber: string
+  sourceTransaction: Transaction[]
+  destinationTransaction: Transaction[]
+}
 
 export default function Table({ userBankAccounts }: any) {
   const [isSelected, setIsSelected] = useState('saving')
-  const [checkingAccount, setCheckingAccount] = useState<Account[]>([])
-  const [savingAccount, setSavingAccount] = useState<Account[]>([])
+  const [accounts, setAccounts] = useState<BankAccountProps[]>([])
 
-  const { setUserAccounts, userAccounts } = useStore((store) => {
+  const { setUserAccounts } = useStore((store) => {
     return {
       setUserAccounts: store.setUserAccounts,
-      userAccounts: store.userAccounts,
     }
   })
 
-  console.log(userBankAccounts, 'aqui')
-
   const fetchAccounts = () => {
-    setCheckingAccount([])
-    setSavingAccount([])
+    const updatedAccounts = userBankAccounts
+      .filter((account: BankAccountProps) => account.accountType === isSelected)
+      .map((account: BankAccountProps) => {
+        const {
+          destinationTransaction,
+          sourceTransaction,
+          accountNumber,
+          accountType,
+        } = account
 
-    userBankAccounts.forEach((account) => {
-      const { destinationTransaction, sourceTransaction, accountNumber } =
-        account
+        const mergedTransactions = [
+          ...destinationTransaction,
+          ...sourceTransaction,
+        ]
 
-      const mergedTransactions = [
-        ...destinationTransaction,
-        ...sourceTransaction,
-      ]
+        return {
+          accountNumber,
+          accountType,
+          transactions: mergedTransactions,
+        }
+      })
 
-      if (account.accountType === 'checking') {
-        setCheckingAccount((prevAccounts: any) => [
-          ...prevAccounts,
-
-          { accountNumber, transactions: mergedTransactions },
-        ])
-      } else if (account.accountType === 'saving') {
-        setSavingAccount((prevAccounts: any) => [
-          ...prevAccounts,
-
-          { accountNumber, transactions: mergedTransactions },
-        ])
-      }
-    })
+    setAccounts(updatedAccounts)
   }
 
   useEffect(() => {
     fetchAccounts()
   }, [userBankAccounts, isSelected])
 
-  console.log(savingAccount, 'aqui a saving')
-  console.log(checkingAccount, 'aqui a checking')
-
   useEffect(() => {
     setUserAccounts(userBankAccounts)
   }, [])
+
+  useEffect(() => {}, [accounts])
 
   const tableHead = ['Source Acc', 'Dest. Acc', 'Transaction', 'Value', 'Date']
 
@@ -94,8 +95,7 @@ export default function Table({ userBankAccounts }: any) {
             })}
           </tr>
         </thead>
-
-        {renderTransactions(savingAccount)}
+        {renderTransactions(accounts, isSelected)}
       </table>
     </div>
   )

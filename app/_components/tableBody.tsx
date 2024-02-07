@@ -1,5 +1,5 @@
 import { ArrowDownCircle, ArrowRightLeft, ArrowUpCircle } from 'lucide-react'
-import {BankAccountProps} from './table'
+
 import React from 'react'
 
 interface Transaction {
@@ -7,15 +7,19 @@ interface Transaction {
   transactionAccountId: string
   destinationAccountId: string
   amount: number
-  transactionType: 'deposit' | 'withdraw' | 'transfer'
+  transactionType: string
   timestamp: Date
+}
+
+interface Account {
+  accountNumber: string
+  accountType: string
+  transactions: Transaction[]
 }
 
 interface TransactionRowProps {
   transaction: Transaction
-  getColorClass: (
-    transactionType: 'deposit' | 'withdraw' | 'transfer'
-  ) => string
+  getColorClass: (transactionType: string) => string
   isSelected: string
 }
 
@@ -104,24 +108,25 @@ export const TransactionRow = ({
 }
 
 export const renderTransactions = (
-  transactions: BankAccountProps,
+  transactions: Account[],
   isSelected: string
 ) => {
-  const getColorClass = (
-    transactionType: 'deposit' | 'withdraw' | 'transfer'
-  ) => {
-    const parseColors = {
-      deposit: 'text-green-500',
-      withdraw: 'text-red-500',
-      transfer: 'text-blue-500',
-    }
+  const parseColors: { [key: string]: string } = {
+    deposit: 'text-green-500',
+    withdraw: 'text-red-500',
+    transfer: 'text-blue-500',
+  }
+
+  const getColorClass = (transactionType: string) => {
     return parseColors[transactionType] || ''
   }
 
+  console.log(transactions, 'aqui')
+
   return (
     <tbody>
-      {transactions.map((account: any) =>
-        account.transactions.map((transaction: any) => (
+      {transactions.map((account: Account) =>
+        account.transactions.map((transaction: Transaction) => (
           <TransactionRow
             key={transaction.transactionId}
             transaction={transaction}

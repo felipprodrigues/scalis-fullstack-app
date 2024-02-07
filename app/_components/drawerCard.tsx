@@ -1,18 +1,14 @@
 'use client'
 import { z } from 'zod'
-
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-
 import { RadioGroup } from '../_components/ui/radio-group'
 import { Label } from '../_components/ui/label'
-
 import { api } from '../_lib/axios'
-
 import { useToast } from './ui/use-toast'
-import { useEffect, useRef } from 'react'
+import { UserAccountData } from '../(home)/page'
 
 const drawerInputSchema = z.object({
   origin: z.string(),
@@ -24,11 +20,10 @@ type DrawerInputData = z.infer<typeof drawerInputSchema>
 
 interface DrawerCardProps {
   transactionType: string
-  userAccountData: any
+  userAccountData: UserAccountData
 }
 
 const DrawerCard = ({ transactionType, userAccountData }: DrawerCardProps) => {
-  const prevTransactionType = useRef(transactionType)
   const { toast } = useToast()
 
   const {
@@ -47,7 +42,7 @@ const DrawerCard = ({ transactionType, userAccountData }: DrawerCardProps) => {
   const onFormSubmit: SubmitHandler<DrawerInputData> = async (data) => {
     const dataCollection = {
       data,
-      userAccounts: userAccountData.userBankAccounts,
+      userAccounts: userAccountData?.userBankAccounts,
       transactionType,
     }
 

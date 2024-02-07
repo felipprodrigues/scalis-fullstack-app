@@ -1,4 +1,3 @@
-import { Session } from '@prisma/client'
 import { Button } from './ui/button'
 import {
   Dialog,
@@ -14,7 +13,12 @@ interface CreateAccountModalProps {
   open: boolean
   handleCloseModal: () => void
   createBankAccount: () => void
-  session: any
+  session: {
+    id: string
+    sessionToken: string
+    userId: string
+    expires: string // Date may need conversion
+  }
 }
 
 export function CreateAccountModal({
@@ -23,8 +27,9 @@ export function CreateAccountModal({
   open,
   handleCloseModal,
 }: CreateAccountModalProps) {
-  const { name: userName } = session.data.user
+  const { name: userName } = session?.data.user
 
+  console.log(session, 'aqui a session')
   return (
     <div>
       <Dialog open={open} onOpenChange={handleCloseModal}>

@@ -4,30 +4,41 @@ import React, { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { Transaction } from '@prisma/client'
 import { renderTransactions } from './tableBody'
+import { UserAccountData } from '../(home)/page'
 
-export interface BankAccountProps {
-  accountId: string
-  userId: string
-  accountType: string
-  accountNumber: string
-  sourceTransaction: Transaction[]
-  destinationTransaction: Transaction[]
-  authorizedUserId: string
-}
+// export interface BankAccountProps {
+//   accountId: string
+//   userId: string
+//   accountType: string
+//   accountNumber: string
+//   sourceTransaction: Transaction[]
+//   destinationTransaction: Transaction[]
+// }
+
+// interface AccountObject {
+//   accountNumber: string
+//   accountType: string
+//   transactions: Transaction
+// }
+// interface TableProps {
+//   userAccountData: UserAccountData
+//   setHandleTransactions: (obj: AccountObject[]) => void
+//   isSelected: string
+// }
 
 export default function Table({
   userAccountData,
-  authorizedUserId,
   setHandleTransactions,
   isSelected,
 }: any) {
-  // const [isSelected, setIsSelected] = useState('saving')
-  const [transactions, setTransactions] = useState<BankAccountProps[]>([])
+  const [transactions, setTransactions] = useState([])
+
+  console.log(userAccountData.userBankAccounts, 'aqui')
 
   const fetchAccounts = () => {
     const updatedAccounts = userAccountData.userBankAccounts
-      .filter((account: BankAccountProps) => account.accountType === isSelected)
-      .map((account: BankAccountProps) => {
+      .filter((account) => account.accountType === isSelected)
+      .map((account) => {
         const {
           destinationTransaction,
           sourceTransaction,

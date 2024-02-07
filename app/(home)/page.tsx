@@ -4,19 +4,33 @@ import { db } from '../_lib/prisma'
 import { LoginCard } from '../_components/loginCard'
 import { Main } from '../_components/main'
 import { Header } from '../_components/header'
+import { Session } from '@prisma/client'
+
+interface Transaction {
+  transactionId: string
+  transactionAccountId: string | null
+  destinationAccountId: string | null
+  amount: number
+  transactionType: string
+  timestamp: Date
+}
+
+export interface UserAccountData {
+  userBankAccounts: {
+    sourceTransaction: Transaction[]
+    destinationTransaction: Transaction[]
+  }[]
+  session: Session | null
+}
 
 async function getUserAuthorization() {
   const session = await getServerSession(authOptions)
 
-  console.log(session, 'authOptions')
-
   return session
 }
 
-async function getUserBankAccounts() {
+async function getUserBankAccounts(): Promise<UserAccountData> {
   const session = await getUserAuthorization()
-
-  console.log(session?.user.id, 'aqui o usuário')
 
   const userBankAccounts = await db.bankAccount.findMany({
     where: {
@@ -28,8 +42,6 @@ async function getUserBankAccounts() {
     },
   })
 
-  console.log(userBankAccounts, 'initial page - contas do usuário logado')
-
   return { userBankAccounts, session }
 }
 
@@ -39,18 +51,12 @@ export default async function Home() {
 
   return (
     <>
-      <Header
-        userAccountData={userAccountData}
-        authorizedUserId={userAuthorized}
-      />
+      <Header userAccountData={userAccountData} />
       <main className="flex justify-center items-center w-full h-full">
         {userAuthorized ? (
           <div className="w-full max-w-[1120px] relative">
             <div className="absolute top-[-1.25rem] w-full flex flex-col gap-8">
-              <Main
-                userAccountData={userAccountData}
-                authorizedUserId={userAuthorized}
-              />
+              <Main userAccountData={userAccountData} />
             </div>
           </div>
         ) : (

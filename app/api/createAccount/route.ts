@@ -4,14 +4,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: NextApiRequest) {
-  // if (request.method !== 'POST') {
-  //   return response.status(405).end()
-  // }
   const res = await request.json()
 
-  // console.log(res, 'aqui o res da nova requisição')
   const userId = res
-  console.log(userId, 'id do usuário para criação de conta')
 
   const userBankAccounts = await db.bankAccount.findMany({
     where: {

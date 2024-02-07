@@ -15,8 +15,6 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account }) {
-      console.log(token, 'token')
-
       if (account) {
         token.accessToken = token.access_token
       }
@@ -29,46 +27,9 @@ export const authOptions: AuthOptions = {
         user
       }
 
-      console.log(session, 'dentro da api')
       return session
     },
   },
-  // secret: process.env.NEXTAUTH_SECRET,
-  // session: {
-  //   strategy: 'jwt',
-  // },
-  // async signIn({ user }) {
-  //   const userBankAccounts = await db.bankAccount.findMany({
-  //     where: {
-  //       userId: user.id,
-  //     },
-  //   })
-
-  //   if (!userBankAccounts.length) {
-  //     try {
-  //       await db.bankAccount.create({
-  //         data: {
-  //           userId: user.id,
-  //           accountType: 'saving',
-  //           accountNumber: generateRandomBankAccount(),
-  //         },
-  //       })
-
-  //       await db.bankAccount.create({
-  //         data: {
-  //           userId: user.id,
-  //           accountType: 'checking',
-  //           accountNumber: generateRandomBankAccount(),
-  //         },
-  //       })
-  //     } catch (error) {
-  //       console.log(error, 'error redirecting user')
-  //     }
-  //   }
-
-  // console.log(userBankAccounts, 'sign in ')
-  // return true
-  // },
 }
 
 const handler = NextAuth(authOptions)

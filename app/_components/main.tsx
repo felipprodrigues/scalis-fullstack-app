@@ -7,13 +7,13 @@ import BalanceCard from './balanceCards'
 import Table from '@/app/_components/table'
 import { Button } from './ui/button'
 import { Transaction } from '@prisma/client'
+import { UserAccountData } from '../(home)/page'
 
-interface MainProps {
-  userAccountData: any
-  authorizedUserId: any
-}
-
-export function Main({ userAccountData, authorizedUserId }: MainProps) {
+export function Main({
+  userAccountData,
+}: {
+  userAccountData: UserAccountData
+}) {
   const [handleTransactions, setHandleTransactions] = useState<{
     accountNumber: string
     accountType: string
@@ -61,7 +61,6 @@ export function Main({ userAccountData, authorizedUserId }: MainProps) {
 
           <Table
             userAccountData={userAccountData}
-            authorizedUserId={authorizedUserId}
             setHandleTransactions={setHandleTransactions}
             isSelected={isSelected}
           />

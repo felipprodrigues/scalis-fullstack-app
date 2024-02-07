@@ -8,7 +8,7 @@ import { Button } from './ui/button'
 import { DrawerComponent } from './drawerComponent'
 import { CreateAccountModal } from './createAccountModal'
 import { api } from '../_lib/axios'
-import { LogOut } from 'lucide-react'
+
 
 export function Header({ userAccountData }: any) {
   const [selectedType, setSelectedType] = useState<string | undefined>('')

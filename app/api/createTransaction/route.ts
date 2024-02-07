@@ -1,5 +1,4 @@
 import { db } from '@/app/_lib/prisma'
-import { request } from 'http'
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import { NextResponse } from 'next/server'
@@ -26,21 +25,14 @@ export async function POST(request: NextApiRequest, response: NextApiResponse) {
   }
 
   const { origin, destine } = data
-  // console.log(origin, 'os valores de origem estão aqui')
-  console.log(destine, 'os valores de destino estão aqui')
-  console.log(transactionType, 'tipoe de transação')
 
   const userOriginAccount = userAccounts.find(
-    (account: { accountType: any }) => account.accountType === origin
+    (account: { accountType: string }) => account.accountType === origin
   )
-
-  console.log(userOriginAccount, 'aqui')
 
   const userDestineAccount = userAccounts.find(
-    (account: { accountType: any }) => account.accountType === destine
+    (account: { accountType: string }) => account.accountType === destine
   )
-
-  console.log(userDestineAccount, 'conta de destino')
 
   const currencyConverter = Math.trunc(Number(data.value) * 100)
 

@@ -1,3 +1,4 @@
+import { UserAccountData } from '../(home)/page'
 import DrawerCard from './drawerCard'
 import { Button } from './ui/button'
 import {
@@ -12,7 +13,7 @@ import {
 interface DrawerComponentProps {
   handleSelectTransferType: (value: string) => void
   selectedType: string | undefined
-  userAccountData: any
+  userAccountData: UserAccountData
 }
 
 export function DrawerComponent({

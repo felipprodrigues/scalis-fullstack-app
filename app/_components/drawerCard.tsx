@@ -11,6 +11,9 @@ import { Label } from '../_components/ui/label'
 
 import { api } from '../_lib/axios'
 
+import { useToast } from './ui/use-toast'
+import { useEffect, useRef } from 'react'
+
 const drawerInputSchema = z.object({
   origin: z.string(),
   destine: z.string(),
@@ -25,6 +28,9 @@ interface DrawerCardProps {
 }
 
 const DrawerCard = ({ transactionType, userAccountData }: DrawerCardProps) => {
+  const prevTransactionType = useRef(transactionType)
+  const { toast } = useToast()
+
   const {
     register,
     handleSubmit,
@@ -48,7 +54,10 @@ const DrawerCard = ({ transactionType, userAccountData }: DrawerCardProps) => {
     await api.post('/createTransaction', dataCollection)
 
     reset()
-    document.location.reload()
+
+    setTimeout(() => {
+      document.location.reload()
+    }, 3000)
   }
 
   return (
@@ -199,7 +208,16 @@ const DrawerCard = ({ transactionType, userAccountData }: DrawerCardProps) => {
             </div>
           </div>
 
-          <Button type="submit" className="mt-4" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            className="mt-4"
+            disabled={isSubmitting}
+            onClick={() => {
+              toast({
+                title: `Success! Your ${transactionType} has been processed.`,
+              })
+            }}
+          >
             Submit
           </Button>
         </form>

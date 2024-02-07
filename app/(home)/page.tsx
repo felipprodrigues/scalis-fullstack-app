@@ -1,13 +1,9 @@
 import { getServerSession } from 'next-auth'
-
 import { authOptions } from '../api/auth/[...nextauth]/route'
-
-import { LoginCard } from '../_components/loginCard'
-
-import { Main } from '../_components/main'
-
-import { Header } from '../_components/header'
 import { db } from '../_lib/prisma'
+import { LoginCard } from '../_components/loginCard'
+import { Main } from '../_components/main'
+import { Header } from '../_components/header'
 
 async function getUserAuthorization() {
   const session = await getServerSession(authOptions)
@@ -50,7 +46,7 @@ export default async function Home() {
       <main className="flex justify-center items-center w-full h-full">
         {userAuthorized ? (
           <div className="w-full max-w-[1120px] relative">
-            <div className="absolute top-[-50px] w-full flex flex-col gap-8">
+            <div className="absolute top-[-1.25rem] w-full flex flex-col gap-8">
               <Main
                 userAccountData={userAccountData}
                 authorizedUserId={userAuthorized}

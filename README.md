@@ -2,7 +2,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies:
+```bash
+npm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
@@ -15,8 +20,6 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
@@ -43,3 +46,15 @@ To explore the database tables and models using Prisma as the ORM, follow these 
 
 4. **View and Edit:**
    Navigate to [http://localhost:5555](http://localhost:5555) in your browser if it doesn't open automatically. Here, you can view and edit the database tables and models using the Prisma Studio interface.
+
+## Table of Features:
+
+- [Account Listing Screen]
+- [Input Field for Currency Amounts]
+- [Initialization of Accounts Transfers with Input Data]
+- [Transfer Funds Functionality]
+- [UI Messages for Exceptions]
+- [Next.js with App Router]
+- [Persistence Using SQLite]
+- [Testing]
+- [Version Control]

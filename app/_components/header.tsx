@@ -3,7 +3,7 @@
 import logoImg from '../assets/logo.png'
 import Image from 'next/image'
 import { signOut, useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from './ui/button'
 import { DrawerComponent } from './drawerComponent'
 import { CreateAccountModal } from './createAccountModal'

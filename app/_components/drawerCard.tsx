@@ -48,6 +48,7 @@ const DrawerCard = ({ transactionType, userAccountData }: DrawerCardProps) => {
     await api.post('/createTransaction', dataCollection)
 
     reset()
+    document.location.reload()
   }
 
   return (

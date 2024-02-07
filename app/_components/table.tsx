@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import React, { useEffect, useState } from 'react'
-import useStore from '../zustand-store/store'
 import { Button } from './ui/button'
-import { Account, Transaction } from '@prisma/client'
+import { Transaction } from '@prisma/client'
 import { renderTransactions } from './tableBody'
 
-export type BankAccountProps = {
+export interface BankAccountProps {
   accountId: string
   userId: string
   accountType: string
@@ -16,59 +15,52 @@ export type BankAccountProps = {
   authorizedUserId: string
 }
 
-export default function Table({ userBankAccounts, authorizedUserId }: any) {
+export default function Table({ userAccountData, authorizedUserId }: any) {
   const [isSelected, setIsSelected] = useState('saving')
-  const [accounts, setAccounts] = useState<BankAccountProps[]>([])
+  const [transactions, setTransactions] = useState<BankAccountProps[]>([])
 
-  // const { setUserAccounts } = useStore((store) => {
-  //   return {
-  //     setUserAccounts: store.setUserAccounts,
-  //   }
-  // })
+  const fetchAccounts = () => {
+    const updatedAccounts = userAccountData.userBankAccounts
+      .filter((account: BankAccountProps) => account.accountType === isSelected)
+      .map((account: BankAccountProps) => {
+        const {
+          destinationTransaction,
+          sourceTransaction,
+          accountNumber,
+          accountType,
+        } = account
 
-  // const findUserAccounts
-  // console.log(userBankAccounts, 'aqui as contas do usuário')
-  // console.log(authorizedUserId, 'authorized Id')
+        const mergedTransactions: Transaction[] = [
+          ...destinationTransaction,
+          ...sourceTransaction,
+        ]
 
-  // const fetchAccounts = () => {
-  //   const updatedAccounts = userBankAccounts
-  //     .filter((account: BankAccountProps) => account.accountType === isSelected)
-  //     .map((account: BankAccountProps) => {
-  //       const {
-  //         destinationTransaction,
-  //         sourceTransaction,
-  //         accountNumber,
-  //         accountType,
-  //       } = account
+        const accountObject = {
+          accountNumber,
+          accountType,
+          transactions: mergedTransactions,
+        }
 
-  //       const mergedTransactions = [
-  //         ...destinationTransaction,
-  //         ...sourceTransaction,
-  //       ]
+        return accountObject
+      })
 
-  //       return {
-  //         accountNumber,
-  //         accountType,
-  //         transactions: mergedTransactions,
-  //       }
-  //     })
+    setTransactions(updatedAccounts)
+  }
 
-  //   setAccounts(updatedAccounts)
-  // }
+  useEffect(() => {
+    fetchAccounts()
+  }, [userAccountData, isSelected])
 
-  // useEffect(() => {
-  //   fetchAccounts()
-  // }, [userBankAccounts, isSelected])
+  useEffect(() => {}, [transactions])
 
-  // useEffect(() => {
-  //   setUserAccounts(userBankAccounts)
-  // }, [])
-
-  // useEffect(() => {}, [accounts])
-
-  // console.log(accounts, 'na table')
-
-  const tableHead = ['Source Acc', 'Dest. Acc', 'Transaction', 'Value', 'Date']
+  const tableHead = [
+    'Transaction id',
+    'Origin Acc',
+    'Dest. Acc',
+    'Transaction',
+    'Value',
+    'Date',
+  ]
 
   return (
     <div className="flex flex-col gap-2 mt-10">
@@ -102,7 +94,7 @@ export default function Table({ userBankAccounts, authorizedUserId }: any) {
             })}
           </tr>
         </thead>
-        {/* {renderTransactions(accounts, isSelected)} */}
+        {renderTransactions(transactions, isSelected)}
       </table>
     </div>
   )

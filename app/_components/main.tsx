@@ -3,8 +3,6 @@
 
 import BalanceCard from './balanceCards'
 import Table from '@/app/_components/table'
-import { db } from '../_lib/prisma'
-import { getServerSession } from 'next-auth'
 
 interface MainProps {
   userAccountData: any
@@ -12,10 +10,6 @@ interface MainProps {
 }
 
 export async function Main({ userAccountData, authorizedUserId }: MainProps) {
-  // const userBankAccounts = await getUserBankAccounts()
-
-  console.log(userAccountData, 'aqui')
-
   return (
     <>
       <div className="w-full max-w-[1120px] relative">
@@ -23,10 +17,10 @@ export async function Main({ userAccountData, authorizedUserId }: MainProps) {
           <BalanceCard cardName="Saving" />
           <BalanceCard cardName="Checking" />
 
-          {/* <Table
+          <Table
             userAccountData={userAccountData}
             authorizedUserId={authorizedUserId}
-          /> */}
+          />
         </div>
       </div>
     </>

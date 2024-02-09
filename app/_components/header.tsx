@@ -8,7 +8,7 @@ import { Button } from './ui/button'
 import { DrawerComponent } from './drawerComponent'
 import { CreateAccountModal } from './createAccountModal'
 import { api } from '../_lib/axios'
-
+import { LogOutIcon } from 'lucide-react'
 
 export function Header({ userAccountData }: any) {
   const [selectedType, setSelectedType] = useState<string | undefined>('')
@@ -47,13 +47,23 @@ export function Header({ userAccountData }: any) {
       {session.status === 'authenticated' ? (
         <header className="pt-[2.5rem] pb-[7.5rem] bg-primary w-full flex justify-center">
           <div className="w-full max-w-[1120px] flex justify-between items-center">
-            <Image
-              src={logoImg}
-              alt="logo-image"
-              className="mix-blend-multiply"
-            />
+            <div className="relative flex flex-col">
+              <Image
+                src={logoImg}
+                alt="logo-image"
+                className="mix-blend-multiply"
+              />
 
-            <div className="flex flex-col gap-4 relative">
+              <Button
+                variant="outline"
+                className="bg-transparent text-gray-200 absolute left-0 bottom-[-7rem]  p-2 text-xs border-none"
+                onClick={() => signOut()}
+              >
+                <LogOutIcon size={16} />
+              </Button>
+            </div>
+
+            <div className="flex flex-col gap-4">
               {!userAccountData.userBankAccounts.length ? (
                 <CreateAccountModal
                   open={open}
@@ -68,13 +78,6 @@ export function Header({ userAccountData }: any) {
                   userAccountData={userAccountData}
                 />
               )}
-              <Button
-                variant="outline"
-                className="bg-transparent text-gray-200 absolute right-[-7rem] bottom-[-7rem] rounded-full p-4"
-                onClick={() => signOut()}
-              >
-                Log out
-              </Button>
             </div>
           </div>
         </header>

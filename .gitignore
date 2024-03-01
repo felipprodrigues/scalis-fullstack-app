@@ -15,7 +15,8 @@
 
 # production
 /build
-/data
+/prisma/data
+
 
 # misc
 .DS_Store
